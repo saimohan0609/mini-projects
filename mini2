@@ -1,0 +1,65 @@
+import csv
+from datetime import datetime
+
+def record_attendance(filename):
+    """Record attendance of a gym member."""
+    name = input("Enter member's name: ")
+    date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    with open(filename, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([name, date])
+    
+    print(f"Attendance recorded for {name} on {date}")
+
+def view_attendance(filename):
+    """View all attendance records."""
+    try:
+        with open(filename, mode='r') as file:
+            reader = csv.reader(file)
+            for row in reader:
+                print(f"Name: {row[0]}, Date: {row[1]}")
+    except FileNotFoundError:
+        print("No attendance records found.")
+
+def search_attendance(filename, search_date):
+    """Search attendance records by date."""
+    try:
+        with open(filename, mode='r') as file:
+            reader = csv.reader(file)
+            found = False
+            for row in reader:
+                if search_date in row[1]:
+                    print(f"Name: {row[0]}, Date: {row[1]}")
+                    found = True
+            if not found:
+                print("No records found for the given date.")
+    except FileNotFoundError:
+        print("No attendance records found.")
+
+def main():
+    filename = 'gym_attendance.csv'
+    
+    while True:
+        print("\nGym Attendance System")
+        print("1. Record Attendance")
+        print("2. View Attendance")
+        print("3. Search Attendance by Date")
+        print("4. Exit")
+        
+        choice = input("Enter your choice: ")
+        
+        if choice == '1':
+            record_attendance(filename)
+        elif choice == '2':
+            view_attendance(filename)
+        elif choice == '3':
+            search_date = input("Enter date (YYYY-MM-DD) to search: ")
+            search_attendance(filename, search_date)
+        elif choice == '4':
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()
